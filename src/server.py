@@ -1,18 +1,31 @@
+"""
+MongoDB client endpoint
+"""
+
 import os
 import pymongo
 
-db_name = "covidsafe-db"
-host = "covidsafe-db.mongo.cosmos.azure.com"
-port = 10255
-username = os.getenv("MONGO_USERNAME")
-password = os.getenv("MONGO_PASSWORD")
-args = "ssl=true&\
+
+DB_NAME = "covidsafe-db"
+HOST = "covidsafe-db.mongo.cosmos.azure.com"
+PORT = 10255
+USERNAME = os.getenv("MONGO_USERNAME")
+PASSWORD = os.getenv("MONGO_PASSWORD")
+ARGS = "ssl=true&\
         retrywrites=false&\
         replicaSet=global&\
         maxIdleTimeMS=12000&\
         appName=@covidsafe-db@"
 
-uri = f"mongodb://{username}:{password}@{host}:{port}/{db_name}?{args}"
-client = pymongo.MongoClient(uri)
+URI = f"mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?{ARGS}"
 
-db = client["covidsafe-db"]
+
+def start_client():
+    """Sends mongodb queries"""
+    client = pymongo.MongoClient(URI)
+    for db in client.list_databases():
+        print(db)
+
+
+if __name__ == "__main__":
+    start_client()
