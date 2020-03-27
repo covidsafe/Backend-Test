@@ -1,3 +1,0 @@
-pymongo==3.10.1
-grpcio_tools==1.27.2
-pylint>=2.4.4

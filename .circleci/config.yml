@@ -1,23 +1,36 @@
-version: 2.1
-
-orbs:
-  python: circleci/python@0.2.1
+version: 2
 
 jobs:
-  build-and-test:
-    executor: python/default
+  build:
+    docker:
+      - image: circleci/python:3.8
+    working_directory: ~/code
     steps:
       - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Pipfile.lock" }}
       - run:
           name: submodules
           command: git submodule init && git submodule update
-      - python/install-deps
       - run:
-          name: pylint
+          name: Install dependencies
+          command: |
+            sudo pip install pipenv
+            export PIPENV_VENV_IN_PROJECT=~/code
+            pipenv install
+      - save_cache:
+          paths:
+            - ./.venv
+          key: v1-dependencies-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Generate Corresponding Proto classes
+          command: |
+            mkdir -p src/services
+            python -m grpc_tools.protoc -I src/proto --python_out=src/services --grpc_python_out=src/services src/proto/covidsafe.proto
+      - run:
+          name: Check Linting
           command: pylint --rcfile tests/lint/pylintrc src
-      - run:
-          name: proto
-          command: python -m grpc_tools.protoc -I src/proto --python_out=. --grpc_python_out=. src/proto/covidsafe.proto
 
 workflows:
   main:
