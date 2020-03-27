@@ -11,11 +11,10 @@ HOST = "covidsafe-db.mongo.cosmos.azure.com"
 PORT = 10255
 USERNAME = os.getenv("MONGO_USERNAME")
 PASSWORD = os.getenv("MONGO_PASSWORD")
-ARGS = "ssl=true&\
-        retrywrites=false&\
-        replicaSet=global&\
-        maxIdleTimeMS=12000&\
-        appName=@covidsafe-db@"
+ARGS = "ssl=true&" \
+       "retrywrites=false&" \
+       "maxIdleTimeMS=12000&" \
+       "appName=@covidsafe-db@"
 
 URI = "mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?{ARGS}".format(
     USERNAME=USERNAME,
