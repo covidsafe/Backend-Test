@@ -12,8 +12,11 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: pylint --rcfile tests/lint/pylintrc src
           name: pylint
+          command: pylint --rcfile tests/lint/pylintrc src
+      - run:
+          name: proto
+          command: python -m grpc_tools.protoc -I src/proto --python_out=. --grpc_python_out=. src/proto/covidsafe.proto
 
 workflows:
   main:
