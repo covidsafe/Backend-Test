@@ -8,13 +8,7 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - restore_cache:
-          key: deps
       - python/install-deps
-      - save_cache:
-          key: deps
-          paths:
-            - "/usr/local/bin"
       - run:
           name: pylint
           command: pylint --rcfile tests/lint/pylintrc src
