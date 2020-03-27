@@ -8,10 +8,10 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - restore-cache:
+      - restore_cache:
           key: deps
       - python/install-deps
-      - save-cache:
+      - save_cache:
           key: deps
           paths:
             - "/usr/local/bin"
