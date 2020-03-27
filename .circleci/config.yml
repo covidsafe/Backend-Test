@@ -29,7 +29,7 @@ jobs:
           name: Generate Corresponding Proto classes
           command: |
             mkdir -p src/services
-            python -m grpc_tools.protoc -I src/proto --python_out=src/services --grpc_python_out=src/services src/proto/covidsafe.proto
+            pipenv run python -m grpc_tools.protoc -I src/proto --python_out=src/services --grpc_python_out=src/services src/proto/covidsafe.proto
       - run:
           name: Check Linting
-          command: pylint --rcfile tests/lint/pylintrc src
+          command: pipenv run pylint src --ignore=services

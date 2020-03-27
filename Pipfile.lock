@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "dc2f909994434104968890152ff827bbe946b58450752461f589f94432c31c52"
+            "sha256": "b56cd85bbc88ded9465127f51b91e52175ba28510a3bf94ba6146a8f6fa77a1a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -22,6 +22,13 @@
                 "sha256:840947ebfa8b58f318d42301cf8c0a20fd794a33b61cc4638e28e9e61ba32f42"
             ],
             "version": "==2.3.3"
+        },
+        "grpc-tools": {
+            "hashes": [
+                "sha256:ea9e5150560f5109819dddf40d2f318d1f226939d74a13cd3dc2e860e78de551"
+            ],
+            "index": "pypi",
+            "version": "==0.0.1"
         },
         "grpcio": {
             "hashes": [
@@ -69,6 +76,7 @@
                 "sha256:f9d632ce9fd485119c968ec6a7a343de698c5e014d17602ae2f110f1b05925ed",
                 "sha256:fb62996c61eeff56b59ab8abfcaa0859ec2223392c03d6085048b576b567459b"
             ],
+            "index": "pypi",
             "version": "==1.27.2"
         },
         "grpcio-tools": {

@@ -9,6 +9,8 @@ verify_ssl = true
 pymongo = "*"
 grpcio-tools = "*"
 pylint = "*"
+grpc-tools = "*"
+grpcio = "*"
 
 [requires]
 python_version = "3"
