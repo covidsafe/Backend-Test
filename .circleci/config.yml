@@ -2,9 +2,11 @@ version: 2
 
 jobs:
   build:
+    working_directory: ~/code
     docker:
       - image: circleci/python:3.8
-    working_directory: ~/code
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
       - restore_cache:
@@ -31,8 +33,3 @@ jobs:
       - run:
           name: Check Linting
           command: pylint --rcfile tests/lint/pylintrc src
-
-workflows:
-  main:
-    jobs:
-      - build
