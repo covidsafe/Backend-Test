@@ -1,4 +1,10 @@
-*.pyc
+# python files 
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# editors and IDEs
 *.swp
+*.swo
 .idea/*
-__pycache__/*
