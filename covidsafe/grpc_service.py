@@ -37,6 +37,9 @@ class GrpcService(CovidSafeServerServicer):
                     "phone": request.phone,
                     "key": request.key
                    }
+            logger.debug("Adding ({phone},{key}) to registration collection".format(
+                phone=request.phone,
+                key=request.key))
             collection.insert_one(user)
             return Registered(success=True)
         except Exception as e:
@@ -45,15 +48,20 @@ class GrpcService(CovidSafeServerServicer):
 
     def sendInfectedLogs(self, request_iterator, context):
         logger.debug("Received sendInfectedLogs()")
-        collection = database.blt_logs
         for log in request_iterator:
             print(log.type)
             if log.type == Log.LogType.BLT:
+                collection = database.blt_logs
                 record = {
                           "timestamp": log.timestamp,
                           "uuid": log.bltResult.uuid.decode(),
                           "blt_name": log.bltResult.name
                          }
+                logger.debug("Adding ({timestamp},{uuid},{blt_name}) \
+                        to blt_logs collection".format(
+                    timestamp = record["timestamp"],
+                    uuid = record["uuid"],
+                    blt_name = record["blt_name"]))
                 collection.insert_one(record)
             elif log.type == Log.LogType.GPS:
                 record = {
@@ -61,6 +69,11 @@ class GrpcService(CovidSafeServerServicer):
                           "latitude": log.GPSCoordinate.latitude,
                           "longitude": log.GPSCoordinate.longitude
                          }
+                logger.debug("Adding ({timestamp},{latitude},{longitude}) \
+                        to gps_logs collection".format(
+                    timestamp = record["timestamp"],
+                    uuid = record["latitude"],
+                    blt_name = record["longitude"]))
                 collection.insert_one(record)
             else:
                 logger.error("Unknown LogType in sendInfectedLogs()")
