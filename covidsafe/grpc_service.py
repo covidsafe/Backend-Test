@@ -85,6 +85,26 @@ class GrpcService(CovidSafeServerServicer):
             log_rpc_completed(tag, RPC.FAILURE)
             return Registered(success=False)
 
+    def sendInfectedUserData(self, request, context):
+        tag = generate_tag("sendInfectedUserData", context)
+        log_rpc_received(tag)
+
+        try:
+            collection = database.infected_registration
+            user = {
+                    "phone": request.phone,
+                    "key": request.key,
+                    "dob": request.dob,
+                    "name": request.name
+                   }
+            insert_records(user, collection, tag["tag"])
+            log_rpc_completed(tag, RPC.SUCCESS)
+            return UserDataSent(success=True)
+        except Exception as e:
+            logger.error("Exception: " + e, extra=tag)
+            log_rpc_completed(tag, RPC.FAILURE)
+            return UserDataSent(success=False)
+
     def sendInfectedLogs(self, request_iterator, context):
         tag = generate_tag("sendInfectedLogs", context)
         log_rpc_received(tag)
@@ -130,14 +150,25 @@ class GrpcService(CovidSafeServerServicer):
         log_rpc_completed(tag, RPC.SUCCESS)
         return AddedLogs(success=True)
 
+    # TODO: implement bucketing
     def getBLTContactLogs(self, request_iterator, context):
-        tag = generate_tag("getBLTContactLogs", context)
-        log_rpc_received(tag)
-        for key in request_iterator:
-            pass
-        yield BLTContactLog()
-        log_rpc_completed(tag, RPC.FAILURE)
-
+        try:
+            tag = generate_tag("getBLTContactLogs", context)
+            log_rpc_received(tag)
+            collection = database.blt_logs
+            # TODO: key is unused for now, till bucketing is implemented
+            key = [entry.key for entry in request_iterator]
+            cursor = collection.find({})
+            bltContactLog = BLTContactLog()
+            for log in cursor:
+                bltContactLog.key.key = uuid.uuid4().bytes
+                bltContactLog.uuid.append(log["uuid"].encode())
+                bltContactLog.timestamp.append(log["timestamp"])
+            log_rpc_completed(tag, RPC.SUCCESS)
+            yield bltContactLog
+        except Exception as e:
+            logger.error("Exception: " + str(e), extra=tag)
+            log_rpc_completed(tag, RPC.FAILURE)
 
 # for testing
 def serve():
